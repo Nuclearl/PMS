@@ -13,11 +13,14 @@
     "@react-navigation/bottom-tabs": "^5.11.7",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-chart-kit": "^6.11.0",
     "react-native-gesture-handler": "^1.10.0",
     "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "^2.17.1",
-    "react-navigation": "^4.4.3"
+    "react-native-svg": "^12.1.0",
+    "react-navigation": "^4.4.3",
+    "switch-button-react-native": "^1.0.3"
   },
   "devDependencies": {
     "@babel/core": "7.12.13",

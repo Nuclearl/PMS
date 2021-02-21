@@ -10,6 +10,7 @@ import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Drawing from './src/Draw';
 
 function General() {
   return (
@@ -19,10 +20,6 @@ function General() {
       })}
     </View>
   );
-}
-
-function  Item() {
-  return(<View></View>);
 }
 
 const Tab = createBottomTabNavigator();
@@ -44,10 +41,7 @@ const App: () => React$Node = () => {
           name="General"
           component={General}
         />
-        <Tab.Screen
-          name="Item"
-          component={Item}
-        />
+        <Tab.Screen name="Drawing" component={Drawing} />
       </Tab.Navigator>
     </NavigationContainer>
   );
