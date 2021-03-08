@@ -11,6 +11,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Drawing from './src/Draw';
+import BooksList from './src/BooksList';
 
 function General() {
   return (
@@ -42,6 +43,7 @@ const App: () => React$Node = () => {
           component={General}
         />
         <Tab.Screen name="Drawing" component={Drawing} />
+        <Tab.Screen name="BooksList" component={BooksList} />
       </Tab.Navigator>
     </NavigationContainer>
   );
