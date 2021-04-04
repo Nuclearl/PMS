@@ -35,3 +35,13 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
+
+android {
+    defaultConfig {
+        applicationId "ua.kpi.comsys.io8115"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+}
