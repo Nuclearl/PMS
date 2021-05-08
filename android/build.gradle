@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "29.0.2"
-        minSdkVersion = 16
+        minSdkVersion = 21
         compileSdkVersion = 29
         targetSdkVersion = 29
     }
@@ -33,15 +33,5 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://www.jitpack.io' }
-    }
-}
-
-android {
-    defaultConfig {
-        applicationId "ua.kpi.comsys.io8115"
-        minSdkVersion 15
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
     }
 }

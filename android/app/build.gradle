@@ -129,7 +129,6 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.lab"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
