@@ -1,6 +1,7 @@
 import React  from "react";
 import { Image, StyleSheet, Text, TouchableHighlight, View, Button, Animated, TouchableOpacity } from "react-native";
 import { ListView } from 'realm/react-native';
+import axios from 'axios';
 
 import newBooks from './BooksParse';
 import { SearchBar } from "react-native-elements";
@@ -29,14 +30,16 @@ class BookList extends React.Component {
   constructor(props) {
     super(props);
     let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => (r1 !== r2) });
-    this.state = { dataSource: ds.cloneWithRows(newBooks) };
+    this.state = { dataSource: ds.cloneWithRows([]) };
+    this.getDataSearch('')
+  }
+
+
+  componentWillMount() {
+    this.getDataSearch(this.state.search)
   }
 
   row: Array<any> = [];
-
-  componentWillMount = () => {
-    this.setState({ dataSource: this.state.dataSource.cloneWithRows(newBooks) });
-  };
 
   deleteBook = (title, index) => {
     newBooks.forEach(function(item, index) {
@@ -44,7 +47,39 @@ class BookList extends React.Component {
         delete newBooks[index]}
     });
     this.row[index].close();
-    this.componentWillMount();
+  }
+
+  getDataSearch(req) {
+    if(req){
+      //this.setState({search: req})
+      fetch(`https://api.itbook.store/1.0/search/${req}`)
+        .then(respsonse => respsonse.json())
+        .then(data => {
+          this.setState({ dataSource: this.state.dataSource.cloneWithRows(data.books) });
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(()=>{
+          this.setState({loading:false});
+        })
+    }else{
+      this.setState({ dataSource: this.state.dataSource.cloneWithRows([]) });
+    }
+
+
+  }
+
+
+  getDetailBook = (isbn13)=> {
+    return fetch(`https://api.itbook.store/1.0/books/${isbn13}`)
+      .then(res => res.json())
+      .then(data => {
+        return data
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   RightActions = (progress, dragX, height, rowData, index) => {
@@ -84,10 +119,10 @@ class BookList extends React.Component {
     height = (rowData.title.length < 50) ? 160 : 160 + ((Math.floor(rowData.title.length)/25)-4)*25
     return (
       <Swipeable ref={ref => this.row[index] = ref} friction={3} overshootRight={false} overshootFriction={1} renderRightActions={(progress, dragX) => this.RightActions(progress, dragX, height, rowData, index)}>
-      <TouchableHighlight onPress={this.OpenSecondActivity.bind(this, rowData)} underlayColor="#fff7"
+      <TouchableHighlight onPress={this.OpenSecondActivity.bind(this, this.getDetailBook(rowData.isbn13))} underlayColor="#fff7"
                                  style={containerStyle(height)} >
         <View style={itemStyle(height)}>
-          <Image style={styles.bookImage} source={img_path} />
+          <Image style={styles.bookImage} source={{uri: rowData.image}} />
           <View style={styles.textContainer}>
             <Text style={styles.title}>{rowData.title}</Text>
             <Text style={styles.subtitle}>{rowData.subtitle}</Text>
@@ -105,8 +140,11 @@ class BookList extends React.Component {
 
   updateSearch = (search) => {
     try {
+
       search= search.replace(/\s/g, '');
+
       if(search !== ''){
+        /**
         const newData = newBooks.filter(function (item) {
           const itemData = item.title
             ? item.title.toUpperCase()
@@ -114,7 +152,11 @@ class BookList extends React.Component {
           const textData = search.toUpperCase();
           return itemData.indexOf(textData) > -1;
         });
+
         this.setState({ dataSource: this.state.dataSource.cloneWithRows(newData) });
+         */
+        this.getDataSearch(search)
+
       }
       else{
         this.componentWillMount();
@@ -124,19 +166,6 @@ class BookList extends React.Component {
     }
   };
 
-  componentDidMount() {
-    const { navigation } = this.props;
-
-    this.focusListener = navigation.addListener('focus', () => {
-      this.setState({ dataSource: this.state.dataSource.cloneWithRows(newBooks) });
-    });
-  }
-
-  componentWillUnmount() {
-    if (this.focusListener != null && this.focusListener.remove) {
-      this.focusListener.remove();
-    }
-  }
 
   render() {
     const { search } = this.state;
@@ -153,7 +182,7 @@ class BookList extends React.Component {
           onClear={this.updateSearch}
           value={search}
         />
-        <ListView removeClippedSubviews={false} dataSource={this.state.dataSource} renderRow={(rowData,sectionID, rowID, higlightRow) => this._renderRow(rowData, rowID)} />
+        <ListView enableEmptySections={true} removeClippedSubviews={false} dataSource={this.state.dataSource} renderRow={(rowData,sectionID, rowID, higlightRow) => this._renderRow(rowData, rowID)} />
         </>
     );
   }

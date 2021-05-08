@@ -15,6 +15,8 @@ import Drawing from './src/Draw';
 import BookList from './src/BooksList';
 import DetailBook from "./src/DetailBook";
 import BookAdd from "./src/BookAdd";
+import Photo  from "./src/Photo";
+import PhotoAdd from "./src/PhotoAdd";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { IconButton, Colors } from 'react-native-paper';
 function General(props) {
@@ -42,6 +44,8 @@ function getHeader(route) {
       return false;
     case 'BookList':
       return true;
+    case 'Photo':
+      return true;
   }
 }
 function getHeaderRight(route, navigation) {
@@ -58,6 +62,13 @@ function getHeaderRight(route, navigation) {
         color={Colors.lightBlueA700}
         size={35}
         onPress={() => navigation.navigate('BookAdd')}
+      />;
+    case 'Photo':
+      return <IconButton
+        icon="plus"
+        color={Colors.lightBlueA700}
+        size={35}
+        onPress={() => PhotoAdd(navigation, route)}
       />;
   }
 }
@@ -85,6 +96,7 @@ function TabGeneral({ navigation, route }) {
       <Tab.Screen name="General" component={General} />
       <Tab.Screen name="Drawing" component={Drawing} />
       <Tab.Screen name="BookList" component={BookList}/>
+      <Tab.Screen name="Photo" component={Photo}/>
     </Tab.Navigator>
   );
 }
