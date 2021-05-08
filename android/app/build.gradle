@@ -129,6 +129,7 @@ android {
     }
 
     defaultConfig {
+        applicationId "ua.kpi.comsys.io8115"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
