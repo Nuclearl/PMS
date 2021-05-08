@@ -13,12 +13,34 @@ import images from "./Photos";
 
 class Gallery extends React.Component {
 
+
+  getPhoto(){
+    fetch(`https://pixabay.com/api/?key=19193969-87191e5db266905fe8936d565&q=night+city&image_type=photo&per_page=27`)
+      .then(respsonse => respsonse.json())
+      .then(data => {
+        for (let i = 0; i < data.hits.length; i+=3) {
+          if(data.hits[i].userImageURL!=='' && !images.includes(data.hits[i].userImageURL)) {
+            images.push(data.hits[i].userImageURL);
+
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(()=>{
+        this.setState({loading:false});
+      })
+  }
+
   constructor(props) {
     super(props);
+    this.getPhoto()
     this.state = { dataSource: images };
   }
 
   componentWillMount = () => {
+    this.getPhoto()
     this.setState({ dataSource: images });
   };
 
@@ -35,6 +57,7 @@ class Gallery extends React.Component {
       this.focusListener.remove();
     }
   }
+
 
   render() {
     const cur_images = []

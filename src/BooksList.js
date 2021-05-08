@@ -50,7 +50,7 @@ class BookList extends React.Component {
   }
 
   getDataSearch(req) {
-    if(req){
+    if(req && req.length > 3){
       //this.setState({search: req})
       fetch(`https://api.itbook.store/1.0/search/${req}`)
         .then(respsonse => respsonse.json())
@@ -182,8 +182,8 @@ class BookList extends React.Component {
           onClear={this.updateSearch}
           value={search}
         />
-        <ListView enableEmptySections={true} removeClippedSubviews={false} dataSource={this.state.dataSource} renderRow={(rowData,sectionID, rowID, higlightRow) => this._renderRow(rowData, rowID)} />
-        </>
+        {this.state.dataSource.getRowCount()==0?<Text style={{textAlign: 'center', marginTop: 20, fontSize: 15}}>No items found</Text>:<ListView enableEmptySections={true} removeClippedSubviews={false} dataSource={this.state.dataSource} renderRow={(rowData,sectionID, rowID, higlightRow) => this._renderRow(rowData, rowID)} />}
+       </>
     );
   }
 }
