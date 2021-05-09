@@ -19,8 +19,8 @@ class Gallery extends React.Component {
       .then(respsonse => respsonse.json())
       .then(data => {
         for (let i = 0; i < data.hits.length; i+=1) {
-          if(!images.includes(data.hits[i].previewURL)) {
-            images.push(data.hits[i].previewURL);
+          if(!images.includes(data.hits[i].largeImageURL)) {
+            images.push(data.hits[i].largeImageURL);
 
           }
         }
