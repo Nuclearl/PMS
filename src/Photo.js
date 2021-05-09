@@ -18,9 +18,9 @@ class Gallery extends React.Component {
     fetch(`https://pixabay.com/api/?key=19193969-87191e5db266905fe8936d565&q=night+city&image_type=photo&per_page=27`)
       .then(respsonse => respsonse.json())
       .then(data => {
-        for (let i = 0; i < data.hits.length; i+=3) {
-          if(data.hits[i].userImageURL!=='' && !images.includes(data.hits[i].userImageURL)) {
-            images.push(data.hits[i].userImageURL);
+        for (let i = 0; i < data.hits.length; i+=1) {
+          if(!images.includes(data.hits[i].previewURL)) {
+            images.push(data.hits[i].previewURL);
 
           }
         }
