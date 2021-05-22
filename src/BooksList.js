@@ -6,7 +6,8 @@ import axios from 'axios';
 import newBooks from './BooksParse';
 import { SearchBar } from "react-native-elements";
 import Swipeable from 'react-native-gesture-handler/Swipeable'
-
+import BaseManager from "./database";
+const manager = new BaseManager();
 const data = [];
 // у нас немає можливості передавати зміну в require
 const img_path_section = {
@@ -51,18 +52,27 @@ class BookList extends React.Component {
 
   getDataSearch(req) {
     if(req && req.length > 3){
-      //this.setState({search: req})
-      fetch(`https://api.itbook.store/1.0/search/${req}`)
-        .then(respsonse => respsonse.json())
-        .then(data => {
-          this.setState({ dataSource: this.state.dataSource.cloneWithRows(data.books) });
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(()=>{
-          this.setState({loading:false});
-        })
+      this.timeoutPromise(1000, fetch(`https://api.itbook.store/1.0/search/${req}`)
+          .then(respsonse => respsonse.json())
+          .then(data => {
+            console.log(data)
+            data.books.forEach(book =>  manager.addBookList(book.isbn13, book.title, book.subtitle, book.price, book.image, book.url));
+            this.setState({ dataSource: this.state.dataSource.cloneWithRows(data.books) });
+          })
+          .catch(error => {
+            console.log(error)
+
+          })
+          .finally(()=>{
+            this.setState({loading:false});
+          })).catch(error => {
+          manager.selectBookList(req).then(temp =>  {
+            this.setState({ dataSource: this.state.dataSource.cloneWithRows(temp) });
+
+          });
+
+      });
+
     }else{
       this.setState({ dataSource: this.state.dataSource.cloneWithRows([]) });
     }
@@ -70,6 +80,23 @@ class BookList extends React.Component {
 
   }
 
+  timeoutPromise(ms, promise) {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error("promise timeout"))
+      }, ms);
+      promise.then(
+        (res) => {
+          clearTimeout(timeoutId);
+          resolve(res);
+        },
+        (err) => {
+          clearTimeout(timeoutId);
+          reject(err);
+        }
+      );
+    })
+  }
 
   getDetailBook = (isbn13)=> {
     return fetch(`https://api.itbook.store/1.0/books/${isbn13}`)

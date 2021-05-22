@@ -129,6 +129,8 @@ android {
     }
 
     defaultConfig {
+        applicationId "ua.kpi.comsys.io8115"
+        multiDexEnabled true
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -180,9 +182,11 @@ android {
 }
 
 dependencies {
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation project(':react-native-sqlite-storage')
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 

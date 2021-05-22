@@ -19,7 +19,12 @@ import Photo  from "./src/Photo";
 import PhotoAdd from "./src/PhotoAdd";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { IconButton, Colors } from 'react-native-paper';
+import  BaseManager from "./src/database";
+
+
 function General(props) {
+
+
   props.navigation.setOptions({})
   return (
     <View style={styles.center}>

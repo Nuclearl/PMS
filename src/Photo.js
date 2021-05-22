@@ -10,34 +10,20 @@ import {
   ScrollView
 } from "react-native";
 import images from "./Photos";
+import BaseManager from "./database";
+const manager = new BaseManager();
 
 class Gallery extends React.Component {
 
 
-  getPhoto(){
-    fetch(`https://pixabay.com/api/?key=19193969-87191e5db266905fe8936d565&q=night+city&image_type=photo&per_page=27`)
-      .then(respsonse => respsonse.json())
-      .then(data => {
-        for (let i = 0; i < data.hits.length; i+=1) {
-          if(!images.includes(data.hits[i].largeImageURL)) {
-            images.push(data.hits[i].largeImageURL);
 
-          }
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      .finally(()=>{
-        this.setState({loading:false});
-      })
-  }
 
   constructor(props) {
     super(props);
     this.getPhoto()
     this.state = { dataSource: images };
   }
+
 
   componentWillMount = () => {
     this.getPhoto()
@@ -56,6 +42,48 @@ class Gallery extends React.Component {
     if (this.focusListener != null && this.focusListener.remove) {
       this.focusListener.remove();
     }
+  }
+
+
+  getPhoto(){
+    this.timeoutPromise(1000, fetch(`https://pixabay.com/api/?key=19193969-87191e5db266905fe8936d565&q=night+city&image_type=photo&per_page=27`)
+      .then(respsonse => respsonse.json())
+      .then(data => {
+        for (let i = 0; i < data.hits.length; i+=1) {
+          if(!images.includes(data.hits[i].largeImageURL)) {
+            images.push(data.hits[i].largeImageURL);
+            manager.addGallery(data.hits[i].largeImageURL)
+          }
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(()=>{
+        this.setState({loading:false});
+      })).catch(error => {
+      manager.selectGallery(req).then(temp =>  images = data.hits[i].largeImageURL);
+
+    });
+
+  }
+
+  timeoutPromise(ms, promise) {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error("promise timeout"))
+      }, ms);
+      promise.then(
+        (res) => {
+          clearTimeout(timeoutId);
+          resolve(res);
+        },
+        (err) => {
+          clearTimeout(timeoutId);
+          reject(err);
+        }
+      );
+    })
   }
 
 
